@@ -1,10 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Website</title>
+    <title>My Website</title>
 </head>
 <body>
-  <div id="follow-html"></div>
-  <script src="script.js"></script>
+    <div>Hello</div>
+
+    <span>Page</span>
+    <input type="text" id="page" class="page" value="1">
+    <span>UserGuid</span>
+    <input type="text" id="userGuid" class="userGuid" value="b24e443d-a887-45d6-8699-195b4fe56a2d">
+    <span>LoadType</span>
+    <input type="text" id="loadType" class="loadType" value="2">
+    <span>Token</span>
+    <input type="text" id="token" class="token" value="TD7v1PR4JLFktL%2BdmpR9JC0mBoxcu1rfI2s0bjcZIcATSe9FLwY0QB%2BNtPR8QtEQHK6AgVGQFmSh09vQNOt5ITQ7zcDpv83WR%2Btsie6gaEI%3D">
+    
+    <button onclick="logInputValues()">Submit</button>
+    <div>Manga</div>
+    <div id="follow-html"></div>
 </body>
 </html>
+<script>
+//1
+document.getElementById("page").onchange = function() {
+    var pageValue = this.value;
+};
+document.getElementById("userGuid").onchange = function() {
+    var userGuidValue = this.value;
+};
+document.getElementById("loadType").onchange = function() {
+    var loadTypeValue = this.value;
+};
+document.getElementById("token").onchange = function() {
+    var tokenValue = this.value;
+};
+function logInputValues() {
+    var pageValue = document.getElementById("page").value;
+    var userGuidValue = document.getElementById("userGuid").value;
+    var loadTypeValue = document.getElementById("loadType").value;
+    var tokenValue = document.getElementById("token").value;
+
+    const proxyUrl = 'https://corsproxy.io/?';
+    const targetUrl = `https://f.nettruyenio.com/Comic/Services/ComicService.asmx/GetFollowedPageComics?page=${pageValue}&userGuid=${userGuidValue}&loadType=${loadTypeValue}&token=${tokenValue}`;
+
+    fetch(proxyUrl + targetUrl)
+        .then(response => response.json())
+        .then(data => {
+            // Get the followHtml value
+            const followHtml = data.followedListHtml;
+            // Display the followHtml on the webpage
+            // console.log(followHtml);
+            document.getElementById('follow-html').innerHTML = followHtml;
+            var followActions = document.querySelectorAll('div.follow-action');
+            followActions.forEach(function(element) {
+                element.remove();
+            });
+            var comicLinks = document.querySelectorAll('a.comic-name');
+            comicLinks.forEach(function(link) {
+                var href = link.getAttribute('href');
+                link.setAttribute('href', 'https://www.nettruyenio.com' + href);
+            });
+            var comicReadLinks = document.querySelectorAll('a.visited');
+            comicReadLinks.forEach(function(link) {
+                var href = link.getAttribute('href');
+                link.setAttribute('href', 'https://www.nettruyenio.com' + href);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+    });
+}
+//2
+// const proxyUrl = 'https://corsproxy.io/?';
+// const inputUrl = 'https://f.nettruyenio.com/Comic/Services/ComicService.asmx/GetFollowedPageComics';
+
+// const requestData = {
+//   page: '1',
+//   userGuid: 'b24e443d-a887-45d6-8699-195b4fe56a2d',
+//   loadType: '3',
+//   token: 'TD7v1PR4JLFktL%2BdmpR9JC0mBoxcu1rfI2s0bjcZIcATSe9FLwY0QB%2BNtPR8QtEQHK6AgVGQFmSh09vQNOt5ITQ7zcDpv83WR%2Btsie6gaEI%3D'
+// };
+
+// const requestOptions = {
+//   method: 'POST',
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+//   body: JSON.stringify(requestData),
+// };
+
+// fetch((proxyUrl + inputUrl), requestOptions)
+//   .then(response => response.json())
+//   .then(data => {
+//     // Handle the response data
+//     console.log(data);
+//   })
+//   .catch(error => {
+//     console.error('Error:', error);
+//   });
+</script>
